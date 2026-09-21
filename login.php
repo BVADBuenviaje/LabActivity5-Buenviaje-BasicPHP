@@ -1,29 +1,38 @@
+<?php
+session_start();
+if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true) {
+    header('Location: index.php');
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['isLoggedIn'] = true;
+    $_SESSION['userEmail'] = $_POST['email'];
+    header('Location: index.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
         <link rel="stylesheet" href="assets/css/tailwind.min.css">
         <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
-        <script>
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'index.php';
-            }
-        </script>
     </head>
     <body class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-96">
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
             <div id="errorMessage" class="hidden bg-red-100 text-red-700 p-3 rounded mb-4 text-sm"></div>
-            <form id="loginForm">
+            <form id="loginForm" method="POST" action="login.php">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
-                    <input class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" id="email" required>
+                    <input class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" id="email" name="email" required>
                 </div>
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
-                    <input class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="password" id="password" required>
+                    <input class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="password" id="password" name="password" required>
                 </div>
                 <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Login</button>
             </form>
@@ -31,7 +40,6 @@
         </div>
         <script>
             document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const registeredEmail = localStorage.getItem('registeredEmail');
@@ -39,20 +47,18 @@
                 const errorMessage = document.getElementById('errorMessage');
 
                 if (!registeredEmail || email !== registeredEmail) {
+                    e.preventDefault();
                     errorMessage.textContent = 'Incorrect email address.';
                     errorMessage.classList.remove('hidden');
                     return;
                 }
 
                 if (password !== registeredPassword) {
+                    e.preventDefault();
                     errorMessage.textContent = 'Incorrect password.';
                     errorMessage.classList.remove('hidden');
                     return;
                 }
-
-                errorMessage.classList.add('hidden');
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'index.php';
             });
         </script>
     </body>

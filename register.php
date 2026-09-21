@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true) {
+    header('Location: index.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,11 +13,6 @@
         <title>Register</title>
         <link rel="stylesheet" href="assets/css/tailwind.min.css">
         <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
-        <script>
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'index.php';
-            }
-        </script>
     </head>
     <body class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-96">
